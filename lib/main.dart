@@ -1,7 +1,8 @@
+import 'package:cj_crowdsourcing_app/startpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'register.dart';
-import 'mypage.dart';
+import 'startpage.dart';
 
 void main() {
   runApp(MyApp());
@@ -96,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MyPage()));
+                              builder: (context) => Startpage()));
                     },
                     child: Text('로그인'),
                   ),
