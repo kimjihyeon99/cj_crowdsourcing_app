@@ -33,7 +33,8 @@ class SecondWidget extends StatelessWidget {
       length: choices.length,
       child: Scaffold(
         appBar: AppBar(
-          bottom: TabBar(
+          automaticallyImplyLeading: false,
+          title: TabBar(
             tabs: choices.map((String choice) {
               return Tab(text: choice);
             }).toList(),
