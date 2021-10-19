@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'register.dart';
 import 'startpage.dart';
-import 'package:camera/camera.dart';
+import 'model/info.dart';
+import 'package:cj_crowdsourcing_app/db/dbHelper.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,6 +31,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  DBHelper dbHelper = DBHelper();
+
   final idController = TextEditingController();
   final pwController = TextEditingController();
 
@@ -96,10 +99,11 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   TextButton(
                     onPressed: () {
+                      dbHelper.insertInfo(Info(id: '57', pw: 'mini'));
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SelfCertificationPage()));
+                         context,
+                         MaterialPageRoute(
+                             builder: (context) => SelfCertificationPage()));
                     },
                     child: Text("회원가입"),
                   ),
@@ -108,13 +112,18 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => Startpage())
-                      // );
-                      print(idController.text);
-                      print(pwController.text);
+                      dbHelper.getAllInfo().then((value) => value.forEach((element) {
+                        if (element.id == idController.text && element.pw == pwController.text){
+                          //메인화면으로 전환
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Startpage())
+                          );
+                        }
+
+
+                      }));
                     },
                     child: Text('로그인'),
                   ),
