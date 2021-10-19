@@ -1,5 +1,4 @@
-import 'dart:collection';
-
+import 'deliverlist.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +12,11 @@ import 'mypage.dart';
 
 class Startpage extends StatefulWidget {
   Startpage({Key? key}) : super(key: key);
+
   @override
   _StartpageState createState() => _StartpageState();
 }
+
 
 class SecondWidget extends StatefulWidget {
   SecondWidget({Key? key}) : super(key: key);
@@ -116,14 +117,12 @@ class _SecondWidget extends State<SecondWidget> {
                       )
                   )
               ),
-
-              Icon(Icons.account_box),
+              Diliverlist(), //배송 목록 화면
             ]
         ),
       ),
     );
   }
-
   //업무신청
   showWorkList(int state) {
     //업무 신청 전
@@ -411,20 +410,23 @@ class workDetail{
     this.deliveryCount = deliveryCount;
   }
 }
-
 class _StartpageState extends State<Startpage> {
   @override
   Widget build(BuildContext context) {
     List<BottomNavigationBarItem> items = [
-      BottomNavigationBarItem(icon: Icon(CupertinoIcons.map), title: Text("지도")),
-      BottomNavigationBarItem(icon: Icon(CupertinoIcons.list_bullet), title: Text("업무목록")),
-      BottomNavigationBarItem(icon: Icon(CupertinoIcons.profile_circled), title: Text("마이페이지"))
+      BottomNavigationBarItem(
+          icon: Icon(CupertinoIcons.map), label: '지도',),
+      BottomNavigationBarItem(
+          icon: Icon(CupertinoIcons.list_bullet), label:"업무목록"),
+      BottomNavigationBarItem(
+          icon: Icon(CupertinoIcons.profile_circled), label:"마이페이지")
     ];
 
-    return
-      CupertinoTabScaffold(
-
-        tabBar: CupertinoTabBar(items: items),
+    return CupertinoTabScaffold(
+        tabBar: CupertinoTabBar(
+          items: items,
+          currentIndex: 1,//첫번째 페이지를 업무목록 위젯으로 설정함
+        ),
         tabBuilder: (context, index) {
           switch (index) {
             case 0:
@@ -437,8 +439,7 @@ class _StartpageState extends State<Startpage> {
               return SecondWidget();
 
           }
+        });
       );
   }
-
-
 }
