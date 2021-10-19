@@ -32,6 +32,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   DBHelper dbHelper = DBHelper();
+
   final idController = TextEditingController();
   final pwController = TextEditingController();
 
@@ -111,7 +112,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-
                       dbHelper.getAllInfo().then((value) => value.forEach((element) {
                         if (element.id == idController.text && element.pw == pwController.text){
                           //메인화면으로 전환
@@ -124,7 +124,6 @@ class _LoginPageState extends State<LoginPage> {
 
 
                       }));
-
                     },
                     child: Text('로그인'),
                   ),
