@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'worklist.dart';
-import 'deliverlist/deliverlist.dart';
+import 'deliverlist.dart';
 import 'map.dart';
 import 'mypage.dart';
 

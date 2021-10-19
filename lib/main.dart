@@ -2,8 +2,8 @@ import 'package:cj_crowdsourcing_app/startpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'register.dart';
-import '../startpage.dart';
-import '../model/info.dart';
+import 'startpage.dart';
+import 'model/info.dart';
 import 'package:cj_crowdsourcing_app/db/dbHelper.dart';
 
 void main() {

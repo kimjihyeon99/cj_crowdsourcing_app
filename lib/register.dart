@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import '../model/info.dart';
+import 'model/info.dart';
 import 'package:cj_crowdsourcing_app/db/dbHelper.dart';
 import 'main.dart';
 
