@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'mypage.dart';
+import 'startpage.dart';
 
 class SelfCertificationPage extends StatefulWidget {
   SelfCertificationPage({Key? key}) : super(key: key);
@@ -492,7 +492,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MyPage()));
+                              builder: (context) => Startpage()));
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.blue,
