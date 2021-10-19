@@ -440,6 +440,5 @@ class _StartpageState extends State<Startpage> {
 
           }
         });
-      );
   }
 }
