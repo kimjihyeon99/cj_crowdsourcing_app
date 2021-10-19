@@ -2,8 +2,9 @@ import 'package:cj_crowdsourcing_app/startpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'register.dart';
-import 'startpage.dart';
-import 'package:camera/camera.dart';
+import '../startpage.dart';
+import '../model/info.dart';
+import 'package:cj_crowdsourcing_app/db/dbHelper.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,6 +31,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  DBHelper dbHelper = DBHelper();
+  final idController = TextEditingController();
+  final pwController = TextEditingController();
+
+  @override
+  void dispose() {
+    idController.dispose();
+    pwController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,10 +64,13 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               width: 300,
               child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: '아이디',
-                  )),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '아이디',
+                ),
+                controller: idController,
+              ),
+
             ),
             Spacer(
               flex: 1,
@@ -69,6 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                   border: OutlineInputBorder(),
                   labelText: '비밀번호',
                 ),
+                controller: pwController,
               ),
             ),
             Spacer(
@@ -82,10 +98,11 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   TextButton(
                     onPressed: () {
+                      dbHelper.insertInfo(Info(id: '57', pw: 'mini'));
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SelfCertificationPage()));
+                         context,
+                         MaterialPageRoute(
+                             builder: (context) => SelfCertificationPage()));
                     },
                     child: Text("회원가입"),
                   ),
@@ -94,10 +111,20 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Startpage()));
+
+                      dbHelper.getAllInfo().then((value) => value.forEach((element) {
+                        if (element.id == idController.text && element.pw == pwController.text){
+                          //메인화면으로 전환
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Startpage())
+                          );
+                        }
+
+
+                      }));
+
                     },
                     child: Text('로그인'),
                   ),

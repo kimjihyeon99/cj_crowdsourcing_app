@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'startpage.dart';
+import '../model/info.dart';
+import 'package:cj_crowdsourcing_app/db/dbHelper.dart';
+import 'main.dart';
 
 class SelfCertificationPage extends StatefulWidget {
   SelfCertificationPage({Key? key}) : super(key: key);
@@ -12,6 +14,7 @@ class SelfCertificationPage extends StatefulWidget {
 }
 
 class _SelfCertificationPageState extends State<SelfCertificationPage> {
+
   @override
   Widget build(BuildContext context) {
     String phoneNumber;
@@ -349,6 +352,8 @@ class OtherInformationPage extends StatefulWidget {
 }
 
 class _OtherInformationPageState extends State<OtherInformationPage> {
+  DBHelper dbHelper = DBHelper();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -489,10 +494,14 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      String id ='';
+                      String pw ='';
+                      //정보 넣기
+                      dbHelper.insertInfo(Info(id: id, pw: pw));
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Startpage()));
+                              builder: (context) => LoginPage()));
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.blue,
