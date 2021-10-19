@@ -6,6 +6,7 @@ import 'model/info.dart';
 import 'package:cj_crowdsourcing_app/db/dbHelper.dart';
 import 'main.dart';
 
+
 class SelfCertificationPage extends StatefulWidget {
   SelfCertificationPage({Key? key}) : super(key: key);
 
@@ -212,6 +213,17 @@ class CreationAccountPage extends StatefulWidget {
 }
 
 class _CreationAccountPageState extends State<CreationAccountPage> {
+
+  final idController = TextEditingController();
+  final pwController = TextEditingController();
+
+  @override
+  void dispose() {
+    idController.dispose();
+    pwController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -247,6 +259,7 @@ class _CreationAccountPageState extends State<CreationAccountPage> {
                 SizedBox(
                   width: 190,
                   child: TextField(
+                    controller: idController,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(), labelText: "아이디"),
                   ),
@@ -272,6 +285,7 @@ class _CreationAccountPageState extends State<CreationAccountPage> {
             SizedBox(
               width: 300,
               child: TextField(
+                controller: pwController,
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -317,10 +331,11 @@ class _CreationAccountPageState extends State<CreationAccountPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
+
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OtherInformationPage()));
+                              builder: (context) => OtherInformationPage(id: idController.text, pw: pwController.text)));
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.grey,
@@ -345,13 +360,22 @@ class _CreationAccountPageState extends State<CreationAccountPage> {
 }
 
 class OtherInformationPage extends StatefulWidget {
-  OtherInformationPage({Key? key}) : super(key: key);
+  String id;
+  String pw;
+
+  OtherInformationPage({Key? key, required this.id, required this.pw}) : super(key: key);
 
   @override
-  _OtherInformationPageState createState() => _OtherInformationPageState();
+  _OtherInformationPageState createState() => _OtherInformationPageState(id: id, pw: pw);
 }
 
 class _OtherInformationPageState extends State<OtherInformationPage> {
+
+  String id;
+  String pw;
+
+  _OtherInformationPageState({required this.id, required this.pw});
+
   DBHelper dbHelper = DBHelper();
 
   @override
@@ -494,8 +518,6 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      String id ='';
-                      String pw ='';
                       //정보 넣기
                       dbHelper.insertInfo(Info(id: id, pw: pw));
                       Navigator.push(
