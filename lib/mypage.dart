@@ -1,14 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'main.dart';
 
 class MyPage extends StatefulWidget {
-  MyPage({Key? key}) : super(key: key);
+  String id;
+  MyPage({Key? key, required this.id}) : super(key: key);
 
   @override
-  _MyPageState createState() => _MyPageState();
+  _MyPageState createState() => _MyPageState(id: id);
 }
 
 class _MyPageState extends State<MyPage> {
+  String id;
+  _MyPageState({required this.id});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,15 +34,28 @@ class _MyPageState extends State<MyPage> {
                   backgroundImage: AssetImage('assets/face.jpg'),
                   radius: 40,
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [Text("이름", style: TextStyle(fontWeight: FontWeight.bold),), Text("아이디", style: TextStyle(fontWeight: FontWeight.bold),)],
+                  children: [
+                    Text(
+                      "이름",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "아이디",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text("이름"), Text("아이디")],
+                  children: [Text("이름"), Text(id)],
                 ),
               ],
             ),
@@ -56,9 +74,7 @@ class _MyPageState extends State<MyPage> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
             ),
             TextButton(
-              onPressed: () {
-
-              },
+              onPressed: () {},
               child: Text(
                 "정산내역",
                 style: TextStyle(color: Colors.black, fontSize: 15),
@@ -69,7 +85,8 @@ class _MyPageState extends State<MyPage> {
             ),
             TextButton(
               onPressed: () {
-
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
               },
               child: Text(
                 "로그아웃",

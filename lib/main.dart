@@ -118,11 +118,9 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Startpage())
+                                  builder: (context) => Startpage(id : element.id))
                           );
                         }
-
-
                       }));
                     },
                     child: Text('로그인'),
