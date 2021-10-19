@@ -30,6 +30,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final idController = TextEditingController();
+  final pwController = TextEditingController();
+
+  @override
+  void dispose() {
+    idController.dispose();
+    pwController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,10 +62,13 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               width: 300,
               child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: '아이디',
-                  )),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '아이디',
+                ),
+                controller: idController,
+              ),
+
             ),
             Spacer(
               flex: 1,
@@ -69,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                   border: OutlineInputBorder(),
                   labelText: '비밀번호',
                 ),
+                controller: pwController,
               ),
             ),
             Spacer(
@@ -94,10 +108,13 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Startpage()));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => Startpage())
+                      // );
+                      print(idController.text);
+                      print(pwController.text);
                     },
                     child: Text('로그인'),
                   ),
