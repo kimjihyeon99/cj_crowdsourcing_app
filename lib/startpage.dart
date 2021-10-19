@@ -1,26 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'map.dart';
+import 'mypage.dart';
 
 class Startpage extends StatefulWidget {
   Startpage({Key? key}) : super(key: key);
   @override
   _StartpageState createState() => _StartpageState();
-}
-class FirstWidget extends StatelessWidget {
-  // index가 0인 페이지 먼저 보여줌
-  final PageController pageController = PageController( initialPage: 1, );
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('지도'),
-        ),
-        body:Column(
-
-        )
-    );
-  }
 }
 
 class SecondWidget extends StatelessWidget {
@@ -52,29 +38,13 @@ class SecondWidget extends StatelessWidget {
   }
 }
 
-class ThirdWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('더보기'),
-      ),
-      body:Column(
-        
-      )
-    );
-  }
-}
-
-
 class _StartpageState extends State<Startpage> {
   @override
   Widget build(BuildContext context) {
     List<BottomNavigationBarItem> items = [
       BottomNavigationBarItem(icon: Icon(CupertinoIcons.map), title: Text("지도")),
       BottomNavigationBarItem(icon: Icon(CupertinoIcons.list_bullet), title: Text("업무목록")),
-      BottomNavigationBarItem(icon: Icon(CupertinoIcons.ellipsis), title: Text("더보기"))
+      BottomNavigationBarItem(icon: Icon(CupertinoIcons.profile_circled), title: Text("마이페이지"))
     ];
 
     return
@@ -83,13 +53,13 @@ class _StartpageState extends State<Startpage> {
         tabBuilder: (context, index) {
           switch (index) {
             case 0:
-              return FirstWidget();
+              return MapPage();
             case 1:
               return SecondWidget();
             case 2:
-              return ThirdWidget();
+              return MyPage();
             default:
-              return FirstWidget();
+              return SecondWidget();
           }
         }
     );
