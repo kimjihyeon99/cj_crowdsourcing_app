@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'register.dart';
 import 'startpage.dart';
+import 'package:camera/camera.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,7 +25,6 @@ class MyApp extends StatelessWidget {
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }
