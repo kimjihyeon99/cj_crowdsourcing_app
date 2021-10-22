@@ -8,10 +8,11 @@ import 'mypage.dart';
 
 
 class Startpage extends StatefulWidget {
-  Startpage({Key? key}) : super(key: key);
+  String id;
+  Startpage({Key? key, required this.id}) : super(key: key);
 
   @override
-  _StartpageState createState() => _StartpageState();
+  _StartpageState createState() => _StartpageState(id: id);
 }
 
 
@@ -57,6 +58,10 @@ class _SecondWidget extends State<SecondWidget> {
 }
 
 class _StartpageState extends State<Startpage> {
+  String id;
+
+  _StartpageState({required this.id});
+
   @override
   Widget build(BuildContext context) {
     List<BottomNavigationBarItem> items = [
@@ -80,7 +85,7 @@ class _StartpageState extends State<Startpage> {
             case 1:
               return SecondWidget();
             case 2:
-              return MyPage();
+              return MyPage(id: id);
             default:
               return SecondWidget();
 

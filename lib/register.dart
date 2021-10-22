@@ -417,7 +417,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
               child: TextField(
                   decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: '차량정보 (예시: 모닝)',
+                labelText: '차량명 (예시: 모닝)',
               )),
             ),
             Spacer(flex: 1,),
