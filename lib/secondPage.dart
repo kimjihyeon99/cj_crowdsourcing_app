@@ -14,7 +14,6 @@ class SecondWidget extends StatefulWidget {
 //업무목록 및 배송목록
 class _SecondWidget extends State<SecondWidget> {
   final choices = ['업무 목록', '배송 목록'];
-  late String extDir;
 
   @override
   Widget build(BuildContext context) {

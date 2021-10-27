@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_qr_bar_scanner/qr_bar_scanner_camera.dart';
 import 'dart:async';
+import 'package:buttons_tabbar/buttons_tabbar.dart';
 
 import 'model/diliver.dart';
 
@@ -69,38 +70,53 @@ class _WorklistPageState extends State<Worklist> {
       body: DefaultTabController(
           length: workList.length,
           initialIndex: initialIndexInWorklist,
-          child: Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-                title: TabBar(
-                  tabs: workList.map((String worklist) {
-                    return Tab(text: worklist);
-                  }).toList(),
+          child:Column(
+            children: <Widget>[
+                ButtonsTabBar(
+                  physics: ClampingScrollPhysics(),
+                    // backgroundColor: Colors.red,
+                    // unselectedBackgroundColor: Colors.grey[300],
+                    // unselectedLabelStyle: TextStyle(color: Colors.black),
+                    // labelStyle:
+                    // TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  tabs:[
+                    Tab(
+                      text: workList[0],
+                      icon: Icon(CupertinoIcons.add_circled),
+                    ),
+                    Tab(
+                      text: workList[1],
+                      icon: Icon(CupertinoIcons.check_mark_circled),
+                    ),
+                    Tab(
+                      text: workList[2],
+                      icon: Icon(CupertinoIcons.check_mark_circled_solid),
+                    )
+                  ]
                 ),
-              ),
-              body: TabBarView(
-                children: [
-                  //업무 신청
-                  Scaffold(
-                      //업무 목록 보여줄 부분
-                      body: Align(
-                    alignment: Alignment.center,
-                    child: showWorkList(workApplyState, context),
-                  )),
-                  //진행중 업무
-                  Scaffold(
-                      body: Align(
-                    alignment: Alignment.center,
-                    child: showWorkingContent(workingState),
-                  )),
-                  //종료된 업무
-                  Scaffold(
-                      body: Align(
-                    alignment: Alignment.center,
-                    child: showWorkedList(),
-                  )),
-                ],
-              ))),
+              Expanded(
+                child: TabBarView(
+                  children: <Widget>[
+                    //업무 신청
+                    Align(
+                      alignment: Alignment.center,
+                      child: showWorkList(workApplyState, context),
+                    ),
+                    //진행중 업무
+                    Align(
+                      alignment: Alignment.center,
+                      child: showWorkingContent(workingState),
+                    ),
+                    //종료된 업무
+                    Align(
+                      alignment: Alignment.center,
+                      child: showWorkedList(),
+                    ),
+                  ],
+                )
+              )
+            ],
+          )),
     );
   }
 
@@ -126,7 +142,6 @@ class _WorklistPageState extends State<Worklist> {
                 smlist.forEach((element) {
                   smcount.add(items.where((c) => element.compareTo(c.SMname)==0).toList().length);
                 });
-                print(smcount);
               });
             }),
       );
