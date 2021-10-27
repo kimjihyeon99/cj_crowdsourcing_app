@@ -33,7 +33,7 @@ class _SecondWidget extends State<SecondWidget> {
         body: TabBarView(children: [
           //업무 신청, 진행중 업무, 종료된 업무
           Worklist(),
-          Diliverlist(), //배송 목록 화면
+          Diliverlist(items: [],), //배송 목록 화면
         ]),
       ),
     );

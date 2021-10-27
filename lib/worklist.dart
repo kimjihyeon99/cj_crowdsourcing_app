@@ -7,8 +7,8 @@ import 'package:flutter_qr_bar_scanner/qr_bar_scanner_camera.dart';
 import 'dart:async';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 
+import 'deliverlist.dart';
 import 'model/diliver.dart';
-
 
 class Worklist extends StatefulWidget {
   Worklist({Key? key}) : super(key: key);
@@ -34,10 +34,11 @@ class _WorklistPageState extends State<Worklist> {
 
     var jr = response;
     jr = jr.cast<Map<String, dynamic>>();
-    List<Diliver> data = jr.map<Diliver>((json) => Diliver.fromJson(json)).toList();
-    items.addAll(data.where((element) => element.date.compareTo("2021-05-31 00:00:00")==0));
+    List<Diliver> data =
+        jr.map<Diliver>((json) => Diliver.fromJson(json)).toList();
+    items.addAll(data.where(
+        (element) => element.date.compareTo("2021-05-31 00:00:00") == 0));
   }
-
 
   @override
   void initState() {
@@ -51,7 +52,8 @@ class _WorklistPageState extends State<Worklist> {
   int initialIndexInWorklist = 0;
 
   //초기화
-  workDetail wd = new workDetail("", "", 0);
+  workDetail wd = new workDetail(smname:0, location:"", date:"", deliveryCount:0);
+
 
   //qr 찍고난 후 결과 값
   String _output = 'Empty Scan Code';
@@ -70,16 +72,15 @@ class _WorklistPageState extends State<Worklist> {
       body: DefaultTabController(
           length: workList.length,
           initialIndex: initialIndexInWorklist,
-          child:Column(
+          child: Column(
             children: <Widget>[
-                ButtonsTabBar(
-                  physics: ClampingScrollPhysics(),
-                    // backgroundColor: Colors.red,
-                    // unselectedBackgroundColor: Colors.grey[300],
-                    // unselectedLabelStyle: TextStyle(color: Colors.black),
-                    // labelStyle:
-                    // TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  tabs:[
+              ButtonsTabBar(physics: ClampingScrollPhysics(),
+                  // backgroundColor: Colors.red,
+                  // unselectedBackgroundColor: Colors.grey[300],
+                  // unselectedLabelStyle: TextStyle(color: Colors.black),
+                  // labelStyle:
+                  // TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  tabs: [
                     Tab(
                       text: workList[0],
                       icon: Icon(CupertinoIcons.add_circled),
@@ -92,29 +93,27 @@ class _WorklistPageState extends State<Worklist> {
                       text: workList[2],
                       icon: Icon(CupertinoIcons.check_mark_circled_solid),
                     )
-                  ]
-                ),
+                  ]),
               Expanded(
-                child: TabBarView(
-                  children: <Widget>[
-                    //업무 신청
-                    Align(
-                      alignment: Alignment.center,
-                      child: showWorkList(workApplyState, context),
-                    ),
-                    //진행중 업무
-                    Align(
-                      alignment: Alignment.center,
-                      child: showWorkingContent(workingState),
-                    ),
-                    //종료된 업무
-                    Align(
-                      alignment: Alignment.center,
-                      child: showWorkedList(),
-                    ),
-                  ],
-                )
-              )
+                  child: TabBarView(
+                children: <Widget>[
+                  //업무 신청
+                  Align(
+                    alignment: Alignment.center,
+                    child: showWorkList(workApplyState, context),
+                  ),
+                  //진행중 업무
+                  Align(
+                    alignment: Alignment.center,
+                    child: showWorkingContent(workingState),
+                  ),
+                  //종료된 업무
+                  Align(
+                    alignment: Alignment.center,
+                    child: showWorkedList(),
+                  ),
+                ],
+              ))
             ],
           )),
     );
@@ -128,7 +127,7 @@ class _WorklistPageState extends State<Worklist> {
         child: CupertinoButton(
             child: Text("+ 업무 신청"),
             color: Colors.blueAccent,
-            onPressed: () async{
+            onPressed: () async {
               await _loadjson();
 
               setState(() {
@@ -140,7 +139,10 @@ class _WorklistPageState extends State<Worklist> {
                 });
                 smlist = tempsmlist.toList();
                 smlist.forEach((element) {
-                  smcount.add(items.where((c) => element.compareTo(c.SMname)==0).toList().length);
+                  smcount.add(items
+                      .where((c) => element.compareTo(c.SMname) == 0)
+                      .toList()
+                      .length);
                 });
               });
             }),
@@ -157,7 +159,7 @@ class _WorklistPageState extends State<Worklist> {
 
       //업무 내용 임시 저장
       String destination = "대전시 유성구 145";
-      String time =  today+"12:50~18:00";//업무시간
+      String time = today + "12:50~18:00"; //업무시간
 
       if (workCount == 0) {
         return Column(
@@ -213,19 +215,19 @@ class _WorklistPageState extends State<Worklist> {
             //진행 가능 업무 수에 따른 업무 박스
             Container(
                 height: 605,
-                child:ListView.builder(
+                child: ListView.builder(
                   itemCount: smlist.length,
                   itemBuilder: (BuildContext context, int index) {
-                    int count = index+1;
+                    int count = index + 1;
                     //진행 가능 업무 없을 경우
                     return Card(
                       child: ListTile(
                         minLeadingWidth: 10,
                         leading: Text("$count"),
-                        title: Text("택배기사명: "+smlist[index].toString()),
+                        title: Text("택배기사명: " + smlist[index].toString()),
                         //값 받아오기
-                        subtitle: Text(
-                            '\n배송시간 : $time \n물품 수 :'+smcount[index].toString()),
+                        subtitle: Text('\n배송시간 : $time \n물품 수 :' +
+                            smcount[index].toString()),
                         trailing: ElevatedButton(
                           child: Text("수락"),
                           onPressed: () {
@@ -234,35 +236,36 @@ class _WorklistPageState extends State<Worklist> {
                               context: context,
                               builder: (BuildContext context) =>
                                   CupertinoAlertDialog(
-                                    // title: const Text('AlertDialog Title'),
-                                    content: const Text(
-                                        '배송 취소는 불가능합니다.\n신중히 결정해주세요.'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, '취소'),
-                                        child: const Text('취소'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          int clickindex = index;
-                                          int clickcount = smcount[clickindex];
-                                          setState(() {
-                                            //업무 신청 상태 변경
-                                            workApplyState = 2;
-                                            workingState = 1;
-                                            //업무 수락후 진행중 업무 페이지 ㄱㄱ
-                                            initialIndexInWorklist = 1;
-                                            //업무 내용 넣기
-                                            wd = workDetail(destination, time,
-                                                clickcount);
-                                          });
-                                          Navigator.pop(context, '수락');
-                                        },
-                                        child: const Text('수락'),
-                                      ),
-                                    ],
+                                // title: const Text('AlertDialog Title'),
+                                content:
+                                    const Text('배송 취소는 불가능합니다.\n신중히 결정해주세요.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, '취소'),
+                                    child: const Text('취소'),
                                   ),
+                                  TextButton(
+                                    onPressed: () {
+                                      int clickindex = index;
+                                      int smname = smlist[clickindex];
+                                      int clickcount = smcount[clickindex];
+                                      setState(() {
+                                        //업무 신청 상태 변경
+                                        workApplyState = 2;
+                                        workingState = 1;
+                                        //업무 수락후 진행중 업무 페이지 ㄱㄱ
+                                        initialIndexInWorklist = 1;
+                                        //업무 내용 넣기
+                                        wd = workDetail(
+                                          smname:smname,  location:destination, date :time, deliveryCount:clickcount);
+                                      });
+                                      Navigator.pop(context, '수락');
+                                    },
+                                    child: const Text('수락'),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                         ),
@@ -332,54 +335,71 @@ class _WorklistPageState extends State<Worklist> {
             margin: EdgeInsets.all(30),
             alignment: Alignment.centerLeft,
             //위치 내용에 자동으로 맞추기
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "배달 장소 : ${wd.location}",
-                  style: TextStyle(fontSize: 20),
-                ),
-                Text("시간 : ${wd.date}", style: TextStyle(fontSize: 20)),
-                Text("배달 품목 수 : ${wd.deliveryCount}",
-                    style: TextStyle(fontSize: 20)),
-                Align(
-                  alignment: Alignment.center,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        //누르면 바코드 스캔 페이지 ㄱㄱ
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return Center(
-                                child: SizedBox(
-                                  height: 1000,
-                                  width: 500,
-                                  child: QRBarScannerCamera(
-                                    qrCodeCallback: (code) {
-                                      _camState = false;
-                                      //_qrInfo이게 내용물
-                                      _qrInfo = code;
-                                      //입차 큐알코드 찍으면 이전페이지로 못돌아감               ->issue
-                                      Future.delayed(
-                                          const Duration(milliseconds: 600),
-                                          () {
-                                        // deleayed code here
-                                        Navigator.pop(context);
-                                        // Navigator.of(context).pop(
-                                        //     MaterialPageRoute(builder: (context) => SecondWidget()));
-                                      });
-                                    },
+            child: CupertinoButton(
+              child:  Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "배달 장소 : ${wd.location}",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Text("시간 : ${wd.date}", style: TextStyle(fontSize: 20)),
+                  Text("배달 품목 수 : ${wd.deliveryCount}",
+                      style: TextStyle(fontSize: 20)),
+                  Align(
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          //누르면 바코드 스캔 페이지 ㄱㄱ
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Center(
+                                  child: SizedBox(
+                                    height: 1000,
+                                    width: 500,
+                                    child: QRBarScannerCamera(
+                                      qrCodeCallback: (code) {
+                                        _camState = false;
+                                        //_qrInfo이게 내용물
+                                        _qrInfo = code;
+                                        //입차 큐알코드 찍으면 이전페이지로 못돌아감               ->issue
+                                        Future.delayed(
+                                            const Duration(milliseconds: 600),
+                                                () {
+                                              // deleayed code here
+                                              Navigator.pop(context);
+                                              // Navigator.of(context).pop(
+                                              //     MaterialPageRoute(builder: (context) => SecondWidget()));
+                                            });
+                                      },
+                                    ),
                                   ),
-                                ),
-                              );
-                            });
-                      },
-                      child: Text("입차 바코드 스캔하기")),
-                )
-              ],
-            ),
-          )
+                                );
+                              });
+                        },
+                        child: Text("입차 바코드 스캔하기")),
+                  )
+                ],
+              ),
+              onPressed: () {
+                //items 필요한거 추출
+                List<Diliver> pitem  =[];
+                items.forEach((element) {
+                  if(element.SMname == wd.smname){
+                    pitem.add(element);
+                  }
+                });
+                print(pitem);
+                //배송목록화면 넘어가기
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Diliverlist(items: pitem)));
+              },
+            )
+          ),
         ],
       );
     }
@@ -388,9 +408,8 @@ class _WorklistPageState extends State<Worklist> {
   //종료된 업무 보여주기
   showWorkedList() {
     //임시 종료된 업무 객체
-    workDetail wd1 =
-        new workDetail("대전시 유성구 123-1", "2021년 07월 1일", 100);
-    workDetail wd2 = new workDetail("대전시 유성구 123-2", "2021년 07월 4일", 40);
+    workDetail wd1 = new workDetail(smname:10,location:"대전시 유성구 123-1", date:"2021년 07월 1일", deliveryCount:100);
+    workDetail wd2 = new workDetail(smname:11, location:"대전시 유성구 123-2", date:"2021년 07월 4일",deliveryCount: 40);
 
     //종료된 업무개수 받기
     int workedCount = 20;
@@ -432,8 +451,8 @@ class _WorklistPageState extends State<Worklist> {
                   //가지고 있는 완료 정보 가져와야함 -> db에서 가져오면 되긴하는데 아직 없어서 임시방편으로 값 만듦
                   title: Text("${wd1.location}"),
                   //값 받아오기
-                  subtitle: Text(
-                      "배송시간 : ${wd1.date} \n물품 수 : ${wd1.deliveryCount}"),
+                  subtitle:
+                      Text("배송시간 : ${wd1.date} \n물품 수 : ${wd1.deliveryCount}"),
                 ),
               );
             },
@@ -447,14 +466,11 @@ class _WorklistPageState extends State<Worklist> {
 //진행중인 업무 객체 만들기
 class workDetail {
   //주소, 시간, 품목, 배달품목 수
-  String location = "";
-  String date = "";
-  int deliveryCount = 0;
+  int smname;
+  String location;
+  String date;
+  int deliveryCount;
 
-  workDetail(
-      String location, String date, int deliveryCount) {
-    this.location = location;
-    this.date = date;
-    this.deliveryCount = deliveryCount;
-  }
+  workDetail({required this.smname, required this.location, required this.date, required this.deliveryCount});
+
 }
