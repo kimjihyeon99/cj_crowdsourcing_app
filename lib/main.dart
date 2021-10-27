@@ -112,21 +112,21 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Startpage(id : "123"))
-                      );
-                      // dbHelper.getAllInfo().then((value) => value.forEach((element) {
-                      //   if (element.id == idController.text && element.pw == pwController.text){
-                      //     //메인화면으로 전환
-                      //     Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (context) => Startpage(id : element.id))
-                      //     );
-                      //   }
-                      // }));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => Startpage(id : "123"))
+                      // );
+                      dbHelper.getAllInfo().then((value) => value.forEach((element) {
+                        if (element.id == idController.text && element.pw == pwController.text){
+                          //메인화면으로 전환
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Startpage(id : element.id))
+                          );
+                        }
+                      }));
                     },
                     child: Text('로그인'),
                   ),
