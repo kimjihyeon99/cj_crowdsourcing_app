@@ -7,13 +7,10 @@ class MyPage extends StatefulWidget {
   MyPage({Key? key, required this.id}) : super(key: key);
 
   @override
-  _MyPageState createState() => _MyPageState(id: id);
+  _MyPageState createState() => _MyPageState();
 }
 
 class _MyPageState extends State<MyPage> {
-  String id;
-  _MyPageState({required this.id});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +52,7 @@ class _MyPageState extends State<MyPage> {
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text("이름"), Text(id)],
+                  children: [Text("이름"), Text(widget.id)],
                 ),
               ],
             ),
