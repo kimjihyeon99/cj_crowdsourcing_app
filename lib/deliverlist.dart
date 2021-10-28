@@ -12,13 +12,10 @@ class Diliverlist extends StatefulWidget {
   Diliverlist({Key? key,required this.items}) : super(key: key);
 
   @override
-  _DiliverlistPageState createState() => _DiliverlistPageState(items:items);
+  _DiliverlistPageState createState() => _DiliverlistPageState();
 }
 
 class _DiliverlistPageState extends State<Diliverlist> {
-  List<Diliver> items;
-
-  _DiliverlistPageState({required this.items});
 
   String generateRandomString(int len) {
     var r = Random();
@@ -31,8 +28,8 @@ class _DiliverlistPageState extends State<Diliverlist> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    name = List<String>.generate(items.length, (index) => generateRandomString(5) );
-    for(int i=0;i<items.length;i++){
+    name = List<String>.generate(widget.items.length, (index) => generateRandomString(5) );
+    for(int i=0;i<widget.items.length;i++){
       people[name[i]] =0;
     }
 
@@ -40,8 +37,6 @@ class _DiliverlistPageState extends State<Diliverlist> {
 
   @override
   Widget build(BuildContext context) {
-    print(items);
-
     return Scaffold(
       body: ListView.builder(
         itemBuilder: (context, i) {
@@ -108,7 +103,7 @@ class _DiliverlistPageState extends State<Diliverlist> {
         ),
         child: ExpansionTile(
           title: new Text(titlelist[i]+" ("+"${mylist.length})"),
-          children:items
+          children:widget.items
               .map((val) => ListTile(
               title:
               new Column(children: [Text("수취인 : ${mylist[idx]}"),Text("품목 : ${val.subject}"), Text("배송주소 : ${val.address}")]),
@@ -116,7 +111,7 @@ class _DiliverlistPageState extends State<Diliverlist> {
                 final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Customerinfo(name: mylist[idx])));
+                        builder: (context) => Customerinfo(name: mylist[idx],type: i,)));
 
                 setState(() {
                   if (result!=null){

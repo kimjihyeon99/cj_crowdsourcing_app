@@ -10,14 +10,10 @@ class Startpage extends StatefulWidget {
   Startpage({Key? key, required this.id}) : super(key: key);
 
   @override
-  _StartpageState createState() => _StartpageState(id: id);
+  _StartpageState createState() => _StartpageState();
 }
 
 class _StartpageState extends State<Startpage> {
-  String id;
-
-  _StartpageState({required this.id});
-
   @override
   Widget build(BuildContext context) {
     List<BottomNavigationBarItem> items = [
@@ -43,7 +39,7 @@ class _StartpageState extends State<Startpage> {
             case 1:
               return SecondWidget();
             case 2:
-              return MyPage(id: id);
+              return MyPage(id: widget.id);
             default:
               return SecondWidget();
           }

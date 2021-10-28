@@ -366,16 +366,10 @@ class OtherInformationPage extends StatefulWidget {
   OtherInformationPage({Key? key, required this.id, required this.pw}) : super(key: key);
 
   @override
-  _OtherInformationPageState createState() => _OtherInformationPageState(id: id, pw: pw);
+  _OtherInformationPageState createState() => _OtherInformationPageState();
 }
 
 class _OtherInformationPageState extends State<OtherInformationPage> {
-
-  String id;
-  String pw;
-
-  _OtherInformationPageState({required this.id, required this.pw});
-
   DBHelper dbHelper = DBHelper();
 
   @override
@@ -519,7 +513,7 @@ class _OtherInformationPageState extends State<OtherInformationPage> {
                   ElevatedButton(
                     onPressed: () {
                       //정보 넣기
-                      dbHelper.insertInfo(Info(id: id, pw: pw));
+                      dbHelper.insertInfo(Info(id: widget.id, pw: widget.pw));
                       Navigator.push(
                           context,
                           MaterialPageRoute(
