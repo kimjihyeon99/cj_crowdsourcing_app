@@ -50,7 +50,7 @@ class _StartpageState extends State<Startpage> {
         tabBuilder: (context, index) {
           switch (index) {
             case 0:
-              return MapPage();
+              return MapPage(items: widget.items);
             case 1:
               return SecondWidget(
                   id: widget.id,
