@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class MapPage extends StatefulWidget {
   MapPage({Key? key}) : super(key: key);
@@ -13,23 +14,32 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
 
-  // init 위치 : 공과대학 5호관
-  static CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(36.366775, 127.344265),
-    zoom: 15,
-  );
-
   Completer<GoogleMapController> _controller = Completer();
+  LatLng currentLatLng = new LatLng(0,0);
+
+  @override
+  void initState(){
+    super.initState();
+    Geolocator.getCurrentPosition().then((currLocation){
+      setState((){
+        currentLatLng = new LatLng(currLocation.latitude, currLocation.longitude);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
+      body: currentLatLng.latitude == 0 && currentLatLng.longitude == 0 ? Center(child:CircularProgressIndicator()) : Padding(
+        padding: const EdgeInsets.only(bottom: 50.0),
+        child: GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: CameraPosition(target: currentLatLng, zoom: 15),
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+          myLocationEnabled: true,
+        ),
       ),
 
     );
