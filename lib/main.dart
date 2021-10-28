@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -71,7 +72,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 controller: idController,
               ),
-
             ),
             Spacer(
               flex: 1,
@@ -101,9 +101,9 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       dbHelper.insertInfo(Info(id: '57', pw: 'mini'));
                       Navigator.push(
-                         context,
-                         MaterialPageRoute(
-                             builder: (context) => SelfCertificationPage()));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SelfCertificationPage()));
                     },
                     child: Text("회원가입"),
                   ),
@@ -117,16 +117,25 @@ class _LoginPageState extends State<LoginPage> {
                       //     MaterialPageRoute(
                       //         builder: (context) => Startpage(id : "123"))
                       // );
-                      dbHelper.getAllInfo().then((value) => value.forEach((element) {
-                        if (element.id == idController.text && element.pw == pwController.text){
-                          //메인화면으로 전환
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Startpage(id : element.id))
-                          );
-                        }
-                      }));
+                      dbHelper
+                          .getAllInfo()
+                          .then((value) => value.forEach((element) {
+                                if (element.id == idController.text &&
+                                    element.pw == pwController.text) {
+                                  //메인화면으로 전환
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Startpage(
+                                                id: element.id,
+                                                page: 0,
+                                                items: [],
+                                                titems: [],
+                                                state: 0,
+                                                wstate: 0,
+                                              )));
+                                }
+                              }));
                     },
                     child: Text('로그인'),
                   ),

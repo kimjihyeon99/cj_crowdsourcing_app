@@ -1,4 +1,6 @@
 import 'dart:convert' as convert;
+import 'package:cj_crowdsourcing_app/secondPage.dart';
+import 'package:cj_crowdsourcing_app/startpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,15 +9,30 @@ import 'package:flutter_qr_bar_scanner/qr_bar_scanner_camera.dart';
 import 'dart:async';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 
-import 'deliverlist.dart';
 import 'model/diliver.dart';
 
 class Worklist extends StatefulWidget {
-  Worklist({Key? key}) : super(key: key);
+  String id;
+  List<Diliver> titems;
+  List<Diliver> items;
+  int state;
+  int wstate;
+
+  Worklist(
+      {Key? key,
+      required this.id,
+      required this.titems,
+      required this.items,
+      required this.state,
+      required this.wstate})
+      : super(key: key);
 
   @override
   _WorklistPageState createState() => _WorklistPageState();
 }
+
+int workingState = 0;
+int workApplyState = 0;
 
 class _WorklistPageState extends State<Worklist> {
   List<List<dynamic>> data = [];
@@ -43,17 +60,17 @@ class _WorklistPageState extends State<Worklist> {
   @override
   void initState() {
     super.initState();
+    workApplyState = widget.state;
+    workingState = widget.wstate; //0은 업무진행 전, 1은 업무 진행 중
     //스캔 기능
     _scanCode();
   }
 
-  int workApplyState = 0; //0은 업무신청 전, 1은 업무신청 후, 2는 업무 진행 중
-  int workingState = 0; //0은 업무진행 전, 1은 업무 진행 중
   int initialIndexInWorklist = 0;
 
   //초기화
-  workDetail wd = new workDetail(smname:0, location:"", date:"", deliveryCount:0);
-
+  workDetail wd =
+      new workDetail(smname: 0, location: "", date: "", deliveryCount: 0);
 
   //qr 찍고난 후 결과 값
   String _output = 'Empty Scan Code';
@@ -150,6 +167,21 @@ class _WorklistPageState extends State<Worklist> {
     }
     //업무 신청 후
     if (state == 1) {
+      if (widget.titems.length != 0) {
+        items = widget.titems;
+
+        items.forEach((element) {
+          tempsmlist.add(element.SMname);
+        });
+        smlist = tempsmlist.toList();
+        smlist.forEach((element) {
+          smcount.add(items
+              .where((c) => element.compareTo(c.SMname) == 0)
+              .toList()
+              .length);
+        });
+      }
+
       //위치 받아오기
       String currentLocation = "대전시 유성구 145-1번길";
       //오늘 날짜
@@ -258,7 +290,10 @@ class _WorklistPageState extends State<Worklist> {
                                         initialIndexInWorklist = 1;
                                         //업무 내용 넣기
                                         wd = workDetail(
-                                          smname:smname,  location:destination, date :time, deliveryCount:clickcount);
+                                            smname: smname,
+                                            location: destination,
+                                            date: time,
+                                            deliveryCount: clickcount);
                                       });
                                       Navigator.pop(context, '수락');
                                     },
@@ -291,6 +326,14 @@ class _WorklistPageState extends State<Worklist> {
         child: Text("진행중인 업무가 없습니다.\n업무 신청을 해주세요"),
       );
     } else {
+      if (widget.items.length != 0) {
+        wd = workDetail(
+            smname: widget.items[0].SMname,
+            location: "대전시 유성구 145-1번길",
+            date: "2021년 05월 31일",
+            deliveryCount: widget.items.length);
+      }
+
       //완료업무 개수
       int completeWorkList = 0;
       return Column(
@@ -319,87 +362,95 @@ class _WorklistPageState extends State<Worklist> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
           Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 4,
-                  offset: Offset(0, 5), // changes position of shadow
-                ),
-              ],
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: EdgeInsets.all(30),
-            alignment: Alignment.centerLeft,
-            //위치 내용에 자동으로 맞추기
-            child: CupertinoButton(
-              child:  Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "배달 장소 : ${wd.location}",
-                    style: TextStyle(fontSize: 20),
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 4,
+                    offset: Offset(0, 5), // changes position of shadow
                   ),
-                  Text("시간 : ${wd.date}", style: TextStyle(fontSize: 20)),
-                  Text("배달 품목 수 : ${wd.deliveryCount}",
-                      style: TextStyle(fontSize: 20)),
-                  Align(
-                    alignment: Alignment.center,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          //누르면 바코드 스캔 페이지 ㄱㄱ
-                          showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return Center(
-                                  child: SizedBox(
-                                    height: 1000,
-                                    width: 500,
-                                    child: QRBarScannerCamera(
-                                      qrCodeCallback: (code) {
-                                        _camState = false;
-                                        //_qrInfo이게 내용물
-                                        _qrInfo = code;
-                                        //입차 큐알코드 찍으면 이전페이지로 못돌아감               ->issue
-                                        Future.delayed(
-                                            const Duration(milliseconds: 600),
-                                                () {
-                                              // deleayed code here
-                                              Navigator.pop(context);
-                                              // Navigator.of(context).pop(
-                                              //     MaterialPageRoute(builder: (context) => SecondWidget()));
-                                            });
-                                      },
-                                    ),
-                                  ),
-                                );
-                              });
-                        },
-                        child: Text("입차 바코드 스캔하기")),
-                  )
                 ],
+                borderRadius: BorderRadius.circular(12),
               ),
-              onPressed: () {
-                //items 필요한거 추출
-                List<Diliver> pitem  =[];
-                items.forEach((element) {
-                  if(element.SMname == wd.smname){
-                    pitem.add(element);
-                  }
-                });
-                print(pitem);
-                //배송목록화면 넘어가기
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Diliverlist(items: pitem)));
-              },
-            )
-          ),
+              margin: EdgeInsets.all(30),
+              alignment: Alignment.centerLeft,
+              //위치 내용에 자동으로 맞추기
+              child: CupertinoButton(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "배달 장소 : ${wd.location}",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text("시간 : ${wd.date}", style: TextStyle(fontSize: 20)),
+                    Text("배달 품목 수 : ${wd.deliveryCount}",
+                        style: TextStyle(fontSize: 20)),
+                    Align(
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            //누르면 바코드 스캔 페이지 ㄱㄱ
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return Center(
+                                    child: SizedBox(
+                                      height: 1000,
+                                      width: 500,
+                                      child: QRBarScannerCamera(
+                                        qrCodeCallback: (code) {
+                                          _camState = false;
+                                          //_qrInfo이게 내용물
+                                          _qrInfo = code;
+                                          //입차 큐알코드 찍으면 이전페이지로 못돌아감               ->issue
+                                          Future.delayed(
+                                              const Duration(milliseconds: 600),
+                                              () {
+                                            // deleayed code here
+                                            Navigator.pop(context);
+                                            // Navigator.of(context).pop(
+                                            //     MaterialPageRoute(builder: (context) => SecondWidget()));
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                });
+                          },
+                          child: Text("입차 바코드 스캔하기")),
+                    )
+                  ],
+                ),
+                onPressed: () {
+                  //state 전송
+
+                  //items 필요한거 추출
+                  List<Diliver> pitem = [];
+                  items.forEach((element) {
+                    if (element.SMname == wd.smname) {
+                      pitem.add(element);
+                    }
+                  });
+                  items.removeWhere((element) => element.SMname == wd.smname);
+                  print(pitem);
+                  //배송목록화면 넘어가기
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Startpage(
+                              id: widget.id,
+                              page: 1,
+                              items: pitem,
+                              titems: items,
+                              state: workApplyState,
+                              wstate: workingState)));
+                },
+              )),
         ],
       );
     }
@@ -408,8 +459,16 @@ class _WorklistPageState extends State<Worklist> {
   //종료된 업무 보여주기
   showWorkedList() {
     //임시 종료된 업무 객체
-    workDetail wd1 = new workDetail(smname:10,location:"대전시 유성구 123-1", date:"2021년 07월 1일", deliveryCount:100);
-    workDetail wd2 = new workDetail(smname:11, location:"대전시 유성구 123-2", date:"2021년 07월 4일",deliveryCount: 40);
+    workDetail wd1 = new workDetail(
+        smname: 10,
+        location: "대전시 유성구 123-1",
+        date: "2021년 07월 1일",
+        deliveryCount: 100);
+    workDetail wd2 = new workDetail(
+        smname: 11,
+        location: "대전시 유성구 123-2",
+        date: "2021년 07월 4일",
+        deliveryCount: 40);
 
     //종료된 업무개수 받기
     int workedCount = 20;
@@ -471,6 +530,9 @@ class workDetail {
   String date;
   int deliveryCount;
 
-  workDetail({required this.smname, required this.location, required this.date, required this.deliveryCount});
-
+  workDetail(
+      {required this.smname,
+      required this.location,
+      required this.date,
+      required this.deliveryCount});
 }
