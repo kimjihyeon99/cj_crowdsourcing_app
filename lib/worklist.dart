@@ -1,13 +1,13 @@
 import 'dart:convert' as convert;
-import 'package:cj_crowdsourcing_app/secondPage.dart';
 import 'package:cj_crowdsourcing_app/startpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_qr_bar_scanner/qr_bar_scanner_camera.dart';
 import 'dart:async';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
 
 import 'model/diliver.dart';
 
@@ -35,6 +35,7 @@ int workingState = 0;
 int workApplyState = 0;
 
 class _WorklistPageState extends State<Worklist> {
+  String _scanBarcode = 'Unknown';
   List<List<dynamic>> data = [];
   List<Diliver> items = [];
 
@@ -42,6 +43,7 @@ class _WorklistPageState extends State<Worklist> {
   final workList = ['업무 신청', '진행중 업무', '종료된 업무'];
 
   Set<int> tempsmlist = Set(); //택배기사 집합
+  Set<String> barlist = Set();//바코드 찍은 리스트
   List<int> smlist = []; //택배기사 리스트
   List smcount = []; //택배 기사마다 물품개수
 
@@ -67,6 +69,7 @@ class _WorklistPageState extends State<Worklist> {
   }
 
   int initialIndexInWorklist = 0;
+  String isqr = "qr scan";
 
   //초기화
   workDetail wd =
@@ -80,6 +83,52 @@ class _WorklistPageState extends State<Worklist> {
   _scanCode() {
     setState(() {
       _camState = true;
+    });
+  }
+
+  Future<void> scanQR() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      isqr= "barcode scan";
+      _scanBarcode = barcodeScanRes;
+    });
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      //중복이 안되면, 리스트 하나씩 증가 set에 넣으면 될듯
+      barlist.add(barcodeScanRes);
+      if (barlist.length == wd.deliveryCount){
+        isqr = "배송목록보기";
+      }
+      _scanBarcode = barcodeScanRes;
     });
   }
 
@@ -122,7 +171,7 @@ class _WorklistPageState extends State<Worklist> {
                   //진행중 업무
                   Align(
                     alignment: Alignment.center,
-                    child: showWorkingContent(workingState),
+                    child: showWorkingContent(workingState, context),
                   ),
                   //종료된 업무
                   Align(
@@ -319,8 +368,9 @@ class _WorklistPageState extends State<Worklist> {
     }
   }
 
+
   //업무 진행중일때
-  showWorkingContent(int working) {
+  showWorkingContent(int working, BuildContext context) {
     if (working == 0) {
       return Center(
         child: Text("진행중인 업무가 없습니다.\n업무 신청을 해주세요"),
@@ -378,79 +428,52 @@ class _WorklistPageState extends State<Worklist> {
               margin: EdgeInsets.all(30),
               alignment: Alignment.centerLeft,
               //위치 내용에 자동으로 맞추기
-              child: CupertinoButton(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "배달 장소 : ${wd.location}",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text("시간 : ${wd.date}", style: TextStyle(fontSize: 20)),
-                    Text("배달 품목 수 : ${wd.deliveryCount}",
-                        style: TextStyle(fontSize: 20)),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            //누르면 바코드 스캔 페이지 ㄱㄱ
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return Center(
-                                    child: SizedBox(
-                                      height: 1000,
-                                      width: 500,
-                                      child: QRBarScannerCamera(
-                                        qrCodeCallback: (code) {
-                                          _camState = false;
-                                          //_qrInfo이게 내용물
-                                          _qrInfo = code;
-                                          //입차 큐알코드 찍으면 이전페이지로 못돌아감               ->issue
-                                          Future.delayed(
-                                              const Duration(milliseconds: 600),
-                                              () {
-                                            // deleayed code here
-                                            Navigator.pop(context);
-                                            // Navigator.of(context).pop(
-                                            //     MaterialPageRoute(builder: (context) => SecondWidget()));
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                });
-                          },
-                          child: Text("입차 바코드 스캔하기")),
-                    )
-                  ],
-                ),
-                onPressed: () {
-                  //state 전송
-
-                  //items 필요한거 추출
-                  List<Diliver> pitem = [];
-                  items.forEach((element) {
-                    if (element.SMname == wd.smname) {
-                      pitem.add(element);
-                    }
-                  });
-                  items.removeWhere((element) => element.SMname == wd.smname);
-                  print(pitem);
-                  //배송목록화면 넘어가기
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Startpage(
-                              id: widget.id,
-                              page: 1,
-                              items: pitem,
-                              titems: items,
-                              state: workApplyState,
-                              wstate: workingState)));
-                },
-              )),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "배달 장소 : ${wd.location}",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Text("시간 : ${wd.date}", style: TextStyle(fontSize: 20)),
+                  Text("배달 품목 수 : ${wd.deliveryCount}",
+                      style: TextStyle(fontSize: 20)),
+                  Align(
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          if(isqr.compareTo("qr scan")==0){
+                            scanQR();
+                          }else if(isqr.compareTo("barcode scan")==0){
+                            scanBarcodeNormal();
+                          }else{
+                            //items 필요한거 추출
+                            List<Diliver> pitem = [];
+                            items.forEach((element) {
+                              if (element.SMname == wd.smname) {
+                                pitem.add(element);
+                              }
+                            });
+                            items.removeWhere((element) => element.SMname == wd.smname);
+                            print(pitem);
+                            //배송목록화면 넘어가기
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Startpage(
+                                        id: widget.id,
+                                        page: 1,
+                                        items: pitem,
+                                        titems: items,
+                                        state: workApplyState,
+                                        wstate: workingState)));
+                          }
+                        },
+                        child: Text(isqr)),
+                  )
+                ],
+              ),),
         ],
       );
     }
