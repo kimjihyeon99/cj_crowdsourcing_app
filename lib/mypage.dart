@@ -38,10 +38,6 @@ class _MyPageState extends State<MyPage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "이름",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
                       "아이디",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     )
@@ -52,7 +48,7 @@ class _MyPageState extends State<MyPage> {
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text("이름"), Text(widget.id)],
+                  children: [Text(widget.id)],
                 ),
               ],
             ),
@@ -62,20 +58,6 @@ class _MyPageState extends State<MyPage> {
             Divider(
               thickness: 3,
               color: Colors.grey,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              "정보확인",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                "정산내역",
-                style: TextStyle(color: Colors.black, fontSize: 15),
-              ),
             ),
             SizedBox(
               height: 300,
