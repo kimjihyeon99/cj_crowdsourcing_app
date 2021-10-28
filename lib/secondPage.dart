@@ -12,6 +12,7 @@ class SecondWidget extends StatefulWidget {
   List<Diliver> titems;
   int state;
   int wstate;
+  String isqr;
 
   SecondWidget(
       {Key? key,
@@ -20,7 +21,8 @@ class SecondWidget extends StatefulWidget {
       required this.items,
       required this.titems,
       required this.state,
-      required this.wstate})
+      required this.wstate,
+      required this.isqr})
       : super(key: key);
 
   @override
@@ -58,7 +60,8 @@ class _SecondWidget extends State<SecondWidget> {
               titems: widget.titems,
               items: widget.items,
               state: widget.state,
-              wstate: widget.wstate),
+              wstate: widget.wstate,
+              isqr: widget.isqr),
           Diliverlist(
             items: widget.items,
           ), //배송 목록 화면

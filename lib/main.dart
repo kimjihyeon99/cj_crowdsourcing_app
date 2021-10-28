@@ -127,13 +127,13 @@ class _LoginPageState extends State<LoginPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => Startpage(
-                                                id: element.id,
-                                                page: 0,
-                                                items: [],
-                                                titems: [],
-                                                state: 0,
-                                                wstate: 0,
-                                              )));
+                                              id: element.id,
+                                              page: 0,
+                                              items: [],
+                                              titems: [],
+                                              state: 0,
+                                              wstate: 0,
+                                              isqr: "qr scan")));
                                 }
                               }));
                     },

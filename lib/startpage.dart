@@ -1,5 +1,4 @@
 import 'package:cj_crowdsourcing_app/model/diliver.dart';
-import 'package:cj_crowdsourcing_app/worklist.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'map.dart';
@@ -13,6 +12,7 @@ class Startpage extends StatefulWidget {
   List<Diliver> titems;
   int state;
   int wstate;
+  String isqr;
 
   Startpage(
       {Key? key,
@@ -21,7 +21,8 @@ class Startpage extends StatefulWidget {
       required this.items,
       required this.titems,
       required this.state,
-      required this.wstate})
+      required this.wstate,
+      required this.isqr})
       : super(key: key);
 
   @override
@@ -58,7 +59,8 @@ class _StartpageState extends State<Startpage> {
                   items: widget.items,
                   titems: widget.titems,
                   state: widget.state,
-                  wstate: widget.wstate);
+                  wstate: widget.wstate,
+                  isqr: widget.isqr);
             case 2:
               return MyPage(id: widget.id);
             default:
@@ -68,7 +70,8 @@ class _StartpageState extends State<Startpage> {
                   items: widget.items,
                   titems: widget.titems,
                   state: widget.state,
-                  wstate: widget.wstate);
+                  wstate: widget.wstate,
+                  isqr: widget.isqr);
           }
         });
   }

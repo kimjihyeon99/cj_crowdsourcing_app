@@ -8,7 +8,6 @@ import 'dart:async';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
-
 import 'model/diliver.dart';
 
 class Worklist extends StatefulWidget {
@@ -17,6 +16,7 @@ class Worklist extends StatefulWidget {
   List<Diliver> items;
   int state;
   int wstate;
+  String isqr;
 
   Worklist(
       {Key? key,
@@ -24,7 +24,8 @@ class Worklist extends StatefulWidget {
       required this.titems,
       required this.items,
       required this.state,
-      required this.wstate})
+      required this.wstate,
+      required this.isqr})
       : super(key: key);
 
   @override
@@ -43,7 +44,7 @@ class _WorklistPageState extends State<Worklist> {
   final workList = ['업무 신청', '진행중 업무', '종료된 업무'];
 
   Set<int> tempsmlist = Set(); //택배기사 집합
-  Set<String> barlist = Set();//바코드 찍은 리스트
+  Set<String> barlist = Set(); //바코드 찍은 리스트
   List<int> smlist = []; //택배기사 리스트
   List smcount = []; //택배 기사마다 물품개수
 
@@ -59,17 +60,21 @@ class _WorklistPageState extends State<Worklist> {
         (element) => element.date.compareTo("2021-05-31 00:00:00") == 0));
   }
 
+  int initialIndexInWorklist = 0;
+
+  String isqr = "qr scan";
+
   @override
   void initState() {
     super.initState();
     workApplyState = widget.state;
     workingState = widget.wstate; //0은 업무진행 전, 1은 업무 진행 중
+    if (widget.isqr != "") {
+      isqr = widget.isqr;
+    }
     //스캔 기능
     _scanCode();
   }
-
-  int initialIndexInWorklist = 0;
-  String isqr = "qr scan";
 
   //초기화
   workDetail wd =
@@ -100,7 +105,7 @@ class _WorklistPageState extends State<Worklist> {
     if (!mounted) return;
 
     setState(() {
-      isqr= "barcode scan";
+      isqr = "barcode scan";
       _scanBarcode = barcodeScanRes;
     });
   }
@@ -117,15 +122,12 @@ class _WorklistPageState extends State<Worklist> {
       barcodeScanRes = 'Failed to get platform version.';
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
 
     setState(() {
       //중복이 안되면, 리스트 하나씩 증가 set에 넣으면 될듯
       barlist.add(barcodeScanRes);
-      if (barlist.length == wd.deliveryCount){
+      if (barlist.length == wd.deliveryCount) {
         isqr = "배송목록보기";
       }
       _scanBarcode = barcodeScanRes;
@@ -368,7 +370,6 @@ class _WorklistPageState extends State<Worklist> {
     }
   }
 
-
   //업무 진행중일때
   showWorkingContent(int working, BuildContext context) {
     if (working == 0) {
@@ -412,68 +413,71 @@ class _WorklistPageState extends State<Worklist> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
           Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 1,
-                    blurRadius: 4,
-                    offset: Offset(0, 5), // changes position of shadow
-                  ),
-                ],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              margin: EdgeInsets.all(30),
-              alignment: Alignment.centerLeft,
-              //위치 내용에 자동으로 맞추기
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "배달 장소 : ${wd.location}",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text("시간 : ${wd.date}", style: TextStyle(fontSize: 20)),
-                  Text("배달 품목 수 : ${wd.deliveryCount}",
-                      style: TextStyle(fontSize: 20)),
-                  Align(
-                    alignment: Alignment.center,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          if(isqr.compareTo("qr scan")==0){
-                            scanQR();
-                          }else if(isqr.compareTo("barcode scan")==0){
-                            scanBarcodeNormal();
-                          }else{
-                            //items 필요한거 추출
-                            List<Diliver> pitem = [];
-                            items.forEach((element) {
-                              if (element.SMname == wd.smname) {
-                                pitem.add(element);
-                              }
-                            });
-                            items.removeWhere((element) => element.SMname == wd.smname);
-                            print(pitem);
-                            //배송목록화면 넘어가기
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Startpage(
-                                        id: widget.id,
-                                        page: 1,
-                                        items: pitem,
-                                        titems: items,
-                                        state: workApplyState,
-                                        wstate: workingState)));
-                          }
-                        },
-                        child: Text(isqr)),
-                  )
-                ],
-              ),),
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: Offset(0, 5), // changes position of shadow
+                ),
+              ],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: EdgeInsets.all(30),
+            alignment: Alignment.centerLeft,
+            //위치 내용에 자동으로 맞추기
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "배달 장소 : ${wd.location}",
+                  style: TextStyle(fontSize: 20),
+                ),
+                Text("시간 : ${wd.date}", style: TextStyle(fontSize: 20)),
+                Text("배달 품목 수 : ${wd.deliveryCount}",
+                    style: TextStyle(fontSize: 20)),
+                Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        if (isqr.compareTo("qr scan") == 0) {
+                          scanQR();
+                        } else if (isqr.compareTo("barcode scan") == 0) {
+                          scanBarcodeNormal();
+                        } else {
+                          //items 필요한거 추출
+                          List<Diliver> pitem = [];
+                          items.forEach((element) {
+                            if (element.SMname == wd.smname) {
+                              pitem.add(element);
+                            }
+                          });
+                          items.removeWhere(
+                              (element) => element.SMname == wd.smname);
+                          print(pitem);
+                          //배송목록화면 넘어가기
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Startpage(
+                                      id: widget.id,
+                                      page: 1,
+                                      items: pitem,
+                                      titems: items,
+                                      state: workApplyState,
+                                      wstate: workingState,
+                                      isqr: isqr)));
+                        }
+                      },
+                      child: Text(isqr)),
+                )
+              ],
+            ),
+          ),
         ],
       );
     }
