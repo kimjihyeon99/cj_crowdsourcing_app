@@ -9,30 +9,34 @@ List<String> name = [];
 
 class Diliverlist extends StatefulWidget {
   List<Diliver> items;
-  Diliverlist({Key? key,required this.items}) : super(key: key);
+
+  Diliverlist({Key? key, required this.items}) : super(key: key);
 
   @override
   _DiliverlistPageState createState() => _DiliverlistPageState();
 }
 
 class _DiliverlistPageState extends State<Diliverlist> {
-
   String generateRandomString(int len) {
     var r = Random();
-    String randomString =String.fromCharCodes(List.generate(len, (index)=> r.nextInt(33) + 89));
+    String randomString =
+        String.fromCharCodes(List.generate(len, (index) => r.nextInt(33) + 89));
     return randomString;
   }
 
   final titlelist = ["진행", "완료", "미완"];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    name = List<String>.generate(widget.items.length, (index) => generateRandomString(5) );
-    for(int i=0;i<widget.items.length;i++){
-      people[name[i]] =0;
+    people = {};
+    name = [];
+    name = List<String>.generate(
+        widget.items.length, (index) => generateRandomString(5));
+    for (int i = 0; i < widget.items.length; i++) {
+      people[name[i]] = 0;
     }
-
   }
 
   @override
@@ -40,91 +44,115 @@ class _DiliverlistPageState extends State<Diliverlist> {
     return Scaffold(
       body: ListView.builder(
         itemBuilder: (context, i) {
-          if (i==0){
-            List processinglist =[];
+          if (i == 0) {
+            List processinglist = [];
             people.forEach((key, value) {
-              if(value==0){
+              if (value == 0) {
                 processinglist.add(key);
               }
             });
-            return mydeliverlist(processinglist,i);
-          }else if(i==1) {
-            List completelist =[];
+            return mydeliverlist(processinglist, i);
+          } else if (i == 1) {
+            List completelist = [];
             people.forEach((key, value) {
-              if(value==1){
+              if (value == 1) {
                 completelist.add(key);
               }
             });
-            return mydeliverlist(completelist,i);
-          }else{
-            List unfinishedlist =[];
+            return mydeliverlist(completelist, i);
+          } else {
+            List unfinishedlist = [];
             people.forEach((key, value) {
-              if(value==2){
+              if (value == 2) {
                 unfinishedlist.add(key);
               }
             });
-            return mydeliverlist(unfinishedlist,i);
+            return mydeliverlist(unfinishedlist, i);
           }
-
         },
         itemCount: 3,
       ),
     );
   }
-  Widget mydeliverlist(List mylist, int i){
 
-    int idx =0;
-    if(mylist.length ==0){
+  Widget mydeliverlist(List mylist, int i) {
+    int idx = 0;
+
+    if (mylist.length == 0) {
       return Container(
         margin: EdgeInsets.all(10.0),
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.all(
-              Radius.circular(8)),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         child: ExpansionTile(
-          title: new Text(titlelist[i]+" ("+"${mylist.length})"),
-          children: [
-            Container(
-              child: Text("해당 목록 리스트가 없습니다."),
-            )
-          ]
-        ),
+            title: new Text(titlelist[i] + " (" + "${mylist.length})"),
+            children: [
+              Container(
+                child: Text("해당 목록 리스트가 없습니다."),
+              )
+            ]),
       );
-    }else{
-      return Container(
-        margin: EdgeInsets.all(10.0),
-        padding: EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(
-              Radius.circular(8)),
-        ),
-        child: ExpansionTile(
-          title: new Text(titlelist[i]+" ("+"${mylist.length})"),
-          children:widget.items
-              .map((val) => ListTile(
-              title:
-              new Column(children: [Text("수취인 : ${mylist[idx]}"),Text("품목 : ${val.subject}"), Text("배송주소 : ${val.address}")]),
-              onTap: () async {
-                final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Customerinfo(name: mylist[idx],type: i,)));
+    } else {
+      if (i == 2) {
+        return Container(
+          margin: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          child: ExpansionTile(
+            title: new Text(titlelist[i] + " (" + "${mylist.length})"),
+            children: widget.items
+                .map((val) => ListTile(
+                    title: new Column(children: [
+                      Text("수취인 : ${mylist[idx]}"),
+                      Text("품목 : ${val.subject}"),
+                      Text("배송주소 : ${val.address}")
+                    ]),
+                    onTap: () {}))
+                .toList(),
+          ),
+        );
+      } else {
+        return Container(
+          margin: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          child: ExpansionTile(
+            title: new Text(titlelist[i] + " (" + "${mylist.length})"),
+            children: widget.items
+                .map((val) => ListTile(
+                    title: new Column(children: [
+                      Text("수취인 : ${mylist[idx]}"),
+                      Text("품목 : ${val.subject}"),
+                      Text("배송주소 : ${val.address}")
+                    ]),
+                    onTap: () async {
+                      final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Customerinfo(
+                                    name: mylist[idx],
+                                    type: i,
+                                  )));
 
-                setState(() {
-                  if (result!=null){
-                    people[val] = result;
-                  }
-
-                });
-              } // 클릭하면 고객정보로
-          ))
-              .toList(),
-        ),
-      );
+                      setState(() {
+                        if (result != null) {
+                          people[val] = result;
+                        }
+                      });
+                    } // 클릭하면 고객정보로
+                    ))
+                .toList(),
+          ),
+        );
+      }
     }
-
   }
 }

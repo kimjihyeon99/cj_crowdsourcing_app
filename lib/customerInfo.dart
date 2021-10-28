@@ -26,7 +26,7 @@ class _CustomerpageState extends State<Customerinfo> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    if (widget.type==1){
+    if (widget.type==0){//진행중
       return Scaffold(
           appBar: AppBar(
             title: Text("${widget.name} 고객님"),
@@ -123,7 +123,7 @@ class _CustomerpageState extends State<Customerinfo> {
               )
             ],
           ));
-    }else{
+    }else {//완료
       return Scaffold(
           appBar: AppBar(
             title: Text("${widget.name} 고객님"),
@@ -140,87 +140,12 @@ class _CustomerpageState extends State<Customerinfo> {
                     SizedBox(
                       height: 20,
                     ),
-                    returnImage == null
-                        ? Center(
-                      child: Container(
-                        width: size.width*0.8,
-                        height: size.width*0.8,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey, width: 3),
-                        ),
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "사진 업로드 하세요",
-                              textAlign: TextAlign.center,
-                            )),
-                      ),
-                    )
-                        : Container(
-                      width: size.width*0.8,
-                      height: size.width*0.8,
-                      child: ClipRect(
-                        child: FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: SizedBox(
-                            width: size.width*0.8,
-                            child: AspectRatio(
-                              aspectRatio:
-                              1 / _cameraController!.value.aspectRatio,
-                              child: Container(
-                                width: size.width*0.8,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image:
-                                      MemoryImage(returnImage!.readAsBytesSync()),
-                                    )),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: size.width*0.8,
-                      child: CupertinoButton(
-                          color: Colors.lightBlue,
-                          child: Text("사진 업로드"),
-                          onPressed: () async {
-                            final uploadImage = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Completecamera()));
-
-                            setState(() {
-                              returnImage = uploadImage[0];
-                              _cameraController = uploadImage[1];
-                            });
-                          }),
-                    ),
 
                   ],
                 ),
-              )),
-              SizedBox(
-                width: double.infinity,
-                child: CupertinoButton(
-                  color: Colors.lightBlue,
-                  child: Text("배송완료"),
-                  onPressed: () {
-                    //배송완료 처리
-                    if (returnImage != null)
-                      Navigator.pop(context, 1);
-                    else
-                      Navigator.pop(context, 0);
-                  },
-                ),
-              )
+              ))
             ],
           ));
     }
-
   }
 }
