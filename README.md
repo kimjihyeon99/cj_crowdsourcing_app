@@ -1,16 +1,49 @@
 # cj_crowdsourcing_app
 
-A new Flutter project.
+-  CJ대한통운 미래기술 챌린지 (AI·빅데이터 경진대회) 제출 작품
 
-## Getting Started
+## 분야 
+- CROWD 소싱 모바일 앱
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## 도구 
+- flutter
+- intellij
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## 개요
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 배경
+
+- 택배 기사들의 수는 한정되어 있지만 코로나 19로 인한 택배 물류량은 오히려 급증하였다. 
+- 이때문에 배송 인력 부족으로 인한 택배 기사들의 과로 사건이 증가하게 되었다. 
+- 쿠팡플렉스, 배민커넥트와 같이 일반인들을 배송에 참여시켜 이러한 인력난을 해결할 필요성이 생겼다. 
+
+### 필요성
+
+- 크라우드 소싱형 물류 시스템을 도입한 e커머스 시장 전반으로 확산되고 있으며, 해당 시장에서 각 기업들은  물류센터 주문량 급증으로 인한 피해를 예방하여 배송 지연의 단점을 보완했다. 
+- 따라서 CJ대한통운도 크라우드 소싱을 이용한 배송을 도입할 필요가 있다.
+
+
+## 앱의 핵심 의미
+
+-  한정적인 내부의 인적 자원에만 의존하지 않고 많은 외부의 인적 자원의 도움을 받을 수 있다.
+-  외부인은 이러한 참여를 통해 자신들에게 더 나은 제품,서비스를 이용하게 되거나 이익을 공유하는 것도 가능하게하게 한다.
+
+
+## 구현 기능
+  - 회원 가입 및 로그인 기능 : 택배 기사가 간단한 입력을 통해 회원가입을 하면, 해당 정보를 통해 로그인을 할 수 있도록 함
+  - 택배 업무 배정 기능: 사용자가 업무를 요청하면 가장 가까운 집하장의 적절한 택배 갯수를 배정해줌
+  - 업무 시작 확인 기능 : **큐알 코드 촬영**을 통해 고객이 집하장에서 업무 시작을 하고, 자신의 업무 위치를 알 수 있도록 함
+  - 배송 상품 스캔 기능 : 배송해야할 택배의 운송장 속 **바코드를 스캔**하여 배송 정보를 파악할 수 있음
+  - 배송 지도 생성 기능 : 스캔된 택배들을 바탕으로 배송 위치를 나타낸 **지도를 생성**하여 배송 루트를 짜는데에 도움을 줌 
+  - 배송 완료 처리 기능: 배송 완료 후 **사진을 업로드** 하고 확인 버튼을 누르면 **배송 처리가 완료**된 것을 확인할 수 있음
+
+
+## UI
+
+## 기대효과
+
+- 단시간 내에 빠른 배송이 가능하다.
+- 일반인들도 부업으로 수익 창출을 할 수  있다.
+- 택배 기사들의 업무 부담을 줄일 수 있다.
+
