@@ -11,10 +11,6 @@
         android:label="cj_crowdsourcing_app"
         android:icon="@mipmap/ic_launcher">
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDUqMqQG5emZ6kwqrT-HppIMGrgvh3I-bg"/>
-
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
